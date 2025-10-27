@@ -1,0 +1,24 @@
+<!-- public/checkout.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pago seguro - $400 MXN</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+  <div class="checkout-container">
+    <h2>Pago seguro de $400 MXN</h2>
+    <p id="buyerInfo" class="buyer-info"></p>
+
+    <!-- Aquí se montará el formulario de tarjeta -->
+    <div id="payment-element" class="payment-element"></div>
+
+    <button id="payBtn" class="pay-btn">Pagar ahora</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

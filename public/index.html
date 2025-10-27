@@ -1,34 +1,42 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>TerrazaPrompt — Comprar boleto</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Comprar boleto — TerrazaPrompt</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-  <div class="container">
-    <h1>Comprar boleto — TerrazaPrompt</h1>
-    <p class="small">Llena tu nombre y correo antes de continuar al pago.</p>
+<body class="inicio">
+  <div class="card">
+    <h1>🎟️ Comprar boleto — <span>TerrazaPrompt</span></h1>
+    <p>Llena tu nombre y correo antes de continuar al pago.</p>
 
-    <form id="infoForm">
-      <label for="name">Nombre</label>
-      <input id="name" name="name" type="text" required />
+    <form id="buyerForm">
+      <label>
+        Nombre
+        <input type="text" id="name" required />
+      </label>
 
-      <label for="email">Correo</label>
-      <input id="email" name="email" type="email" required />
+      <label>
+        Correo
+        <input type="email" id="email" required />
+      </label>
 
       <button type="submit">Continuar al pago</button>
     </form>
   </div>
 
   <script>
-    // guarda temporalmente en sessionStorage y redirige
-    document.getElementById("infoForm").addEventListener("submit", (e) => {
+    document.getElementById("buyerForm").addEventListener("submit", (e) => {
       e.preventDefault();
       const name = document.getElementById("name").value.trim();
       const email = document.getElementById("email").value.trim();
-      if (!name || !email) return alert("Por favor completa nombre y correo.");
+
+      if (!name || !email) {
+        alert("Por favor completa todos los campos.");
+        return;
+      }
+
       sessionStorage.setItem("buyer_name", name);
       sessionStorage.setItem("buyer_email", email);
       window.location.href = "/checkout.html";

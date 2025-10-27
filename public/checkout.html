@@ -1,22 +1,26 @@
-<!doctype html>
+<!-- public/checkout.html -->
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>TerrazaPrompt — Pago</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pagar $400 MXN - TerrazaPrompt</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://js.stripe.com/v3/"></script>
 </head>
 <body>
-  <div class="container">
-    <h1>Pagar $400 MXN</h1>
-    <p class="small" id="buyerInfo"></p>
+  <div class="checkout-container">
+    <h2>Pago seguro de $400 MXN</h2>
+    <p id="buyerInfo" class="buyer-info"></p>
 
-    <div id="payment-area">
-      <div id="payment-element"></div>
-      <button id="payBtn">Pagar ahora $400</button>
+    <form id="payment-form">
+      <!-- Aquí montaremos Card Element (solo tarjeta) -->
+      <div id="card-element" class="card-element"></div>
+
+      <button id="payBtn" class="pay-btn" type="submit">Pagar ahora</button>
+      <p id="error-message" style="color:#c53030; margin-top:10px;"></p>
       <p class="small">🔒 Pago seguro con Stripe</p>
-    </div>
+    </form>
   </div>
 
   <script src="script.js"></script>

@@ -1,25 +1,23 @@
 // public/script.js
 (async () => {
-  // Solo ejecuta si estamos en checkout.html
+  // Solo ejecutar en checkout.html
   if (!window.location.pathname.includes("checkout")) return;
 
   const buyerName = sessionStorage.getItem("buyer_name");
   const buyerEmail = sessionStorage.getItem("buyer_email");
 
-  // Si faltan datos del comprador, redirige al inicio
   if (!buyerName || !buyerEmail) {
     window.location.href = "/";
     return;
   }
 
-  // Mostrar info del comprador arriba del formulario
   document.getElementById("buyerInfo").innerText = `${buyerName} — ${buyerEmail}`;
 
-  // Crear PaymentIntent desde tu backend
+  // Crear PaymentIntent
   const resp = await fetch("/create-payment-intent", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name: buyerName, email: buyerEmail }),
+    body: JSON.stringify({ name: buyerName, email: buyerEmail })
   });
 
   const json = await resp.json();
@@ -30,56 +28,28 @@
 
   const clientSecret = json.clientSecret;
 
-  // Tu clave pública de Stripe (usa la real en producción)
+  // Clave pública (usa tu pk_test o pk_live)
   const STRIPE_PUBLISHABLE_KEY =
     "pk_test_51SMhak1PQdQKgOrbqdvbWWvIU5KUYILK1jZmDPMbPUZ5m4Ba8OM1efjpcvsUSAI7uhmvvH9gxEWBTwLQgCVCqHCQ002q7dprsF";
 
   const stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
 
-  // 🎨 Estilos personalizados (opcional)
+  // Apariencia personalizada (sin campos extra)
   const appearance = {
-    theme: "stripe",
-    variables: {
-      colorPrimary: "#8b5cf6", // morado
-      colorBackground: "#ffffff",
-      borderRadius: "8px",
-    },
-    rules: {
-      ".Input": {
-        padding: "10px",
-      },
-    },
+    theme: "flat",
+    variables: { colorPrimary: "#00b386", borderRadius: "8px" },
   };
 
-  // ⚙️ Configurar los elementos de pago SIN pedir correo/teléfono
-  const elements = stripe.elements({
-    clientSecret,
-    appearance,
-  });
+  const elements = stripe.elements({ clientSecret, appearance });
 
+  // ✅ Aquí quitamos los campos extra (correo, teléfono, nombre)
   const paymentElement = elements.create("payment", {
-    layout: {
-      type: "accordion", // o "tabs"
-      defaultCollapsed: false,
-    },
-    // 🚫 Ocultar campos innecesarios
-    fields: {
-      billingDetails: {
-        name: "never",
-        email: "never",
-        phone: "never",
-      },
-    },
-    // 🚫 Desactivar Stripe Link completamente
-    wallets: {
-      applePay: "auto",
-      googlePay: "auto",
-      link: "never",
-    },
+    layout: "tabs",
   });
 
   paymentElement.mount("#payment-element");
 
+  // Confirmar pago
   const payBtn = document.getElementById("payBtn");
   payBtn.addEventListener("click", async () => {
     payBtn.disabled = true;
