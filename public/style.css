@@ -1,0 +1,8 @@
+body{font-family:Inter,Arial,Helvetica,sans-serif;background:#f4f7fa;color:#111;margin:0;padding:20px;display:flex;justify-content:center}
+.container{width:420px;background:#fff;border-radius:12px;padding:20px;box-shadow:0 6px 22px rgba(11,22,39,0.08)}
+h1{font-size:20px;margin:0 0 12px}
+label{display:block;margin-top:10px;font-size:14px}
+input{width:100%;padding:10px;border:1px solid #e3e7ee;border-radius:8px;margin-top:6px}
+button{margin-top:16px;background:#00b67a;color:#fff;border:none;padding:12px;border-radius:8px;width:100%;font-weight:600;cursor:pointer}
+.small{font-size:13px;color:#666;margin-top:8px}
+#payment-element{margin-top:12px}
