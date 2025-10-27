@@ -78,16 +78,24 @@
     },
   });
 
-  paymentElement.mount("#payment-element");
+  // Montar en el contenedor correcto: aquí CAMBIAMOS a #card-element para que coincida con checkout.html
+  paymentElement.mount("#card-element");
 
   const payBtn = document.getElementById("payBtn");
-  payBtn.addEventListener("click", async () => {
+  payBtn.addEventListener("click", async (e) => {
+    e.preventDefault(); // prevenir submit de formulario
+
     payBtn.disabled = true;
 
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
         return_url: window.location.origin + "/success.html",
+      },
+      payment_method_data: {
+        billing_details: {
+          name: buyerName,
+        },
       },
     });
 
