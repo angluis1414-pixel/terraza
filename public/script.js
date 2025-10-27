@@ -1,21 +1,21 @@
 // public/script.js
-(async () => {
+document.addEventListener("DOMContentLoaded", async () => {
   // Solo ejecuta si estamos en checkout.html
   if (!window.location.pathname.includes("checkout")) return;
 
   const buyerName = sessionStorage.getItem("buyer_name");
   const buyerEmail = sessionStorage.getItem("buyer_email");
 
-  // Si faltan datos del comprador, redirige al inicio
+  // Redirige al inicio si faltan datos
   if (!buyerName || !buyerEmail) {
     window.location.href = "/";
     return;
   }
 
-  // Mostrar info del comprador arriba del formulario
+  // Mostrar info del comprador
   document.getElementById("buyerInfo").innerText = `${buyerName} — ${buyerEmail}`;
 
-  // Crear PaymentIntent desde tu backend
+  // Crear PaymentIntent en el backend
   const resp = await fetch("/create-payment-intent", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -30,60 +30,30 @@
 
   const clientSecret = json.clientSecret;
 
-  // Tu clave pública de Stripe (usa la real en producción)
-  const STRIPE_PUBLISHABLE_KEY =
-    "pk_test_51SMhak1PQdQKgOrbqdvbWWvIU5KUYILK1jZmDPMbPUZ5m4Ba8OM1efjpcvsUSAI7uhmvvH9gxEWBTwLQgCVCqHCQ002q7dprsF";
+  // Clave pública de Stripe
+  const stripe = Stripe("pk_test_51SMhak1PQdQKgOrbqdvbWWvIU5KUYILK1jZmDPMbPUZ5m4Ba8OM1efjpcvsUSAI7uhmvvH9gxEWBTwLQgCVCqHCQ002q7dprsF");
 
-  const stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
-
-  // 🎨 Estilos personalizados (opcional)
+  // Configuración de apariencia (opcional)
   const appearance = {
     theme: "stripe",
-    variables: {
-      colorPrimary: "#8b5cf6", // morado
-      colorBackground: "#ffffff",
-      borderRadius: "8px",
-    },
-    rules: {
-      ".Input": {
-        padding: "10px",
-      },
-    },
+    variables: { colorPrimary: "#8b5cf6", colorBackground: "#fff", borderRadius: "8px" },
+    rules: { ".Input": { padding: "10px" } },
   };
 
-  // ⚙️ Configurar los elementos de pago SIN pedir correo/teléfono
-  const elements = stripe.elements({
-    clientSecret,
-    appearance,
-  });
+  const elements = stripe.elements({ clientSecret, appearance });
 
   const paymentElement = elements.create("payment", {
-    layout: {
-      type: "accordion", // o "tabs"
-      defaultCollapsed: false,
-    },
-    // 🚫 Ocultar campos innecesarios
-    fields: {
-      billingDetails: {
-        name: "never",
-        email: "never",
-        phone: "never",
-      },
-    },
-    // 🚫 Desactivar Stripe Link completamente
-    wallets: {
-      applePay: "auto",
-      googlePay: "auto",
-      link: "never",
-    },
+    layout: { type: "accordion", defaultCollapsed: false },
+    fields: { billingDetails: { name: "never", email: "never", phone: "never" } },
+    wallets: { applePay: "auto", googlePay: "auto", link: "never" },
   });
 
-  // Montar en el contenedor correcto: aquí CAMBIAMOS a #card-element para que coincida con checkout.html
   paymentElement.mount("#card-element");
 
+  // Botón de pago
   const payBtn = document.getElementById("payBtn");
   payBtn.addEventListener("click", async (e) => {
-    e.preventDefault(); // prevenir submit de formulario
+    e.preventDefault(); // evita que recargue
 
     payBtn.disabled = true;
 
@@ -91,11 +61,7 @@
       elements,
       confirmParams: {
         return_url: window.location.origin + "/success.html",
-      },
-      payment_method_data: {
-        billing_details: {
-          name: buyerName,
-        },
+        payment_method_data: { billing_details: { name: buyerName } }, // ⚡ necesario
       },
     });
 
@@ -104,4 +70,4 @@
       payBtn.disabled = false;
     }
   });
-})();
+});
