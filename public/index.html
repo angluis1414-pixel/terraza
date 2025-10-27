@@ -9,7 +9,7 @@
 <body class="inicio">
   <div class="card">
     <h1>🎟️ Comprar boleto — <span>TerrazaPrompt</span></h1>
-    <p>Llena tu nombre y correo antes de continuar al pago.</p>
+    <p>Llena tu nombre, correo y teléfono antes de continuar al pago.</p>
 
     <form id="buyerForm">
       <label>
@@ -22,6 +22,11 @@
         <input type="email" id="email" required />
       </label>
 
+      <label>
+        Teléfono
+        <input type="tel" id="phone" required />
+      </label>
+
       <button type="submit">Continuar al pago</button>
     </form>
   </div>
@@ -31,14 +36,17 @@
       e.preventDefault();
       const name = document.getElementById("name").value.trim();
       const email = document.getElementById("email").value.trim();
+      const phone = document.getElementById("phone").value.trim();
 
-      if (!name || !email) {
+      if (!name || !email || !phone) {
         alert("Por favor completa todos los campos.");
         return;
       }
 
       sessionStorage.setItem("buyer_name", name);
       sessionStorage.setItem("buyer_email", email);
+      sessionStorage.setItem("buyer_phone", phone);
+
       window.location.href = "/checkout.html";
     });
   </script>
