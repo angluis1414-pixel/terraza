@@ -13,8 +13,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("buyerInfo").innerText =
     `${buyerName} — ${buyerEmail} — ${buyerPhone}`;
 
-  console.log("🔹 Creando PaymentIntent...");
-
+  // Crear PaymentIntent en tu backend
   const resp = await fetch("/create-payment-intent", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -25,22 +24,43 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   if (!data.clientSecret) {
     alert("Error al crear el PaymentIntent.");
-    console.error("Backend respondió:", data);
+    console.error("❌ Backend respondió:", data);
     return;
   }
 
   const clientSecret = data.clientSecret;
 
-  // Clave pública real de Stripe
+  // Stripe public key (usa la tuya)
   const stripe = Stripe("pk_test_51SMhak1PQdQKgOrbqdvbWWvIU5KUYILK1jZmDPMbPUZ5m4Ba8OM1efjpcvsUSAI7uhmvvH9gxEWBTwLQgCVCqHCQ002q7dprsF");
 
+  // Apariencia personalizada
   const appearance = {
     theme: "stripe",
-    variables: { colorPrimary: "#8b5cf6", colorBackground: "#fff", borderRadius: "8px" }
+    variables: {
+      colorPrimary: "#8b5cf6",
+      colorBackground: "#ffffff",
+      borderRadius: "8px"
+    }
   };
 
+  // ⚙️ Crear el elemento de pago sin pedir datos extra
   const elements = stripe.elements({ clientSecret, appearance });
-  const paymentElement = elements.create("payment");
+  const paymentElement = elements.create("payment", {
+    layout: "tabs",
+    fields: {
+      billingDetails: {
+        name: "never",
+        email: "never",
+        phone: "never"
+      }
+    },
+    wallets: {
+      applePay: "never",
+      googlePay: "never",
+      link: "never"
+    }
+  });
+
   paymentElement.mount("#card-element");
 
   const form = document.getElementById("payment-form");
