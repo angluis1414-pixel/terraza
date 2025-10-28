@@ -1,45 +1,70 @@
-// Coloca tu Publishable Key de Stripe aquí
-const stripe = Stripe("TU_PUBLISHABLE_KEY");
+// public/script.js
+document.addEventListener("DOMContentLoaded", async () => {
+  if (!window.location.pathname.includes("checkout")) return;
 
-const elements = stripe.elements();
-const paymentElement = elements.create("payment");
-paymentElement.mount("#card-element");
+  const buyerName = sessionStorage.getItem("buyer_name");
+  const buyerEmail = sessionStorage.getItem("buyer_email");
+  const buyerPhone = sessionStorage.getItem("buyer_phone");
 
-const form = document.getElementById("payment-form");
-const errorMessage = document.getElementById("error-message");
+  if (!buyerName || !buyerEmail || !buyerPhone) {
+    alert("Faltan datos del comprador. Regresando al inicio...");
+    window.location.href = "/";
+    return;
+  }
 
-// Mostrar datos del comprador en checkout
-window.addEventListener("DOMContentLoaded", () => {
-  const buyerInfo = document.getElementById("buyerInfo");
-  const name = sessionStorage.getItem("buyer_name") || "";
-  const email = sessionStorage.getItem("buyer_email") || "";
-  const phone = sessionStorage.getItem("buyer_phone") || "";
+  document.getElementById("buyerInfo").textContent =
+    `${buyerName} — ${buyerEmail} — ${buyerPhone}`;
 
-  buyerInfo.textContent = `Nombre: ${name} | Correo: ${email} | Teléfono: ${phone}`;
-});
-
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const buyerName = sessionStorage.getItem("buyer_name") || "";
-  const buyerEmail = sessionStorage.getItem("buyer_email") || "";
-  const buyerPhone = sessionStorage.getItem("buyer_phone") || "";
-
-  const { error } = await stripe.confirmPayment({
-    elements,
-    confirmParams: {
-      return_url: window.location.origin + "/success.html",
-      payment_method_data: {
-        billing_details: {
-          name: buyerName,
-          email: buyerEmail,
-          phone: buyerPhone,
-        },
-      },
-    },
+  // 🧾 Crear PaymentIntent en el backend
+  const resp = await fetch("/create-payment-intent", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name: buyerName, email: buyerEmail, phone: buyerPhone }),
   });
 
-  if (error) {
-    errorMessage.textContent = error.message;
+  const data = await resp.json();
+  console.log("🔑 Backend responde:", data);
+
+  if (!data.clientSecret) {
+    alert("Error al crear el intento de pago: " + (data.error || "Sin clientSecret"));
+    return;
   }
+
+  const stripe = Stripe("TU_PUBLISHABLE_KEY"); // ⚠️ Usa tu clave pública real
+  const elements = stripe.elements({ clientSecret: data.clientSecret });
+
+  const paymentElement = elements.create("payment", {
+    layout: "tabs",
+  });
+
+  paymentElement.mount("#card-element");
+
+  const form = document.getElementById("payment-form");
+  const errorMessage = document.getElementById("error-message");
+  const payBtn = document.getElementById("payBtn");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    payBtn.disabled = true;
+    errorMessage.textContent = "";
+
+    const { error } = await stripe.confirmPayment({
+      elements,
+      confirmParams: {
+        return_url: window.location.origin + "/success.html",
+        payment_method_data: {
+          billing_details: {
+            name: buyerName,
+            email: buyerEmail,
+            phone: buyerPhone,
+          },
+        },
+      },
+    });
+
+    if (error) {
+      errorMessage.textContent = error.message || "Error al procesar el pago.";
+      payBtn.disabled = false;
+    }
+  });
 });

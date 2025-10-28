@@ -17,35 +17,32 @@ const __dirname = path.dirname(__filename);
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 
-// 🧾 Endpoint: crear PaymentIntent y devolver clientSecret
+// 🧾 Crear PaymentIntent y devolver clientSecret
 app.post("/create-payment-intent", async (req, res) => {
   try {
-    const { name, email } = req.body || {};
+    const { name, email, phone } = req.body || {};
 
-    // Validaciones básicas
     if (!email) {
-      return res.status(400).send({ error: "Falta el correo (email)." });
+      return res.status(400).json({ error: "Falta el correo (email)." });
     }
 
-    // ⚙️ Creamos el PaymentIntent sin Stripe Link ni métodos automáticos
     const paymentIntent = await stripe.paymentIntents.create({
       amount: 40000, // 💰 $400.00 MXN (en centavos)
       currency: "mxn",
-      payment_method_types: ["card"], // 💳 Solo tarjetas
-      receipt_email: email, // Opcional: para recibo
-      metadata: { buyer_name: name || "Sin nombre" },
+      automatic_payment_methods: { enabled: true },
+      receipt_email: email,
+      metadata: { buyer_name: name || "Sin nombre", buyer_phone: phone || "No proporcionado" },
     });
 
-    // Devolvemos el clientSecret al frontend
-    res.send({ clientSecret: paymentIntent.client_secret });
+    res.json({ clientSecret: paymentIntent.client_secret });
   } catch (error) {
     console.error("❌ Error creando PaymentIntent:", error);
-    res.status(500).send({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 });
 
-// 🩺 Ruta simple para chequear el estado del servidor
-app.get("/health", (req, res) => res.send({ ok: true }));
+// 🩺 Ruta de prueba
+app.get("/health", (req, res) => res.json({ ok: true }));
 
 // 🚀 Iniciar servidor
 app.listen(PORT, () => {

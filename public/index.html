@@ -1,54 +1,35 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Comprar boleto — TerrazaPrompt</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body class="inicio">
-  <div class="card">
-    <h1>🎟️ Comprar boleto — <span>TerrazaPrompt</span></h1>
-    <p>Llena tu nombre, correo y teléfono antes de continuar al pago.</p>
+<form id="buyerForm">
+  <label>Nombre
+    <input type="text" id="name" required />
+  </label>
 
-    <form id="buyerForm">
-      <label>
-        Nombre
-        <input type="text" id="name" required />
-      </label>
+  <label>Correo
+    <input type="email" id="email" required />
+  </label>
 
-      <label>
-        Correo
-        <input type="email" id="email" required />
-      </label>
+  <label>Teléfono
+    <input type="tel" id="phone" required />
+  </label>
 
-      <label>
-        Teléfono
-        <input type="tel" id="phone" required />
-      </label>
+  <button type="submit">Continuar al pago</button>
+</form>
 
-      <button type="submit">Continuar al pago</button>
-    </form>
-  </div>
+<script>
+  document.getElementById("buyerForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const phone = document.getElementById("phone").value.trim();
 
-  <script>
-    document.getElementById("buyerForm").addEventListener("submit", (e) => {
-      e.preventDefault();
-      const name = document.getElementById("name").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const phone = document.getElementById("phone").value.trim();
+    if (!name || !email || !phone) {
+      alert("Por favor completa todos los campos.");
+      return;
+    }
 
-      if (!name || !email || !phone) {
-        alert("Por favor completa todos los campos.");
-        return;
-      }
+    sessionStorage.setItem("buyer_name", name);
+    sessionStorage.setItem("buyer_email", email);
+    sessionStorage.setItem("buyer_phone", phone);
 
-      sessionStorage.setItem("buyer_name", name);
-      sessionStorage.setItem("buyer_email", email);
-      sessionStorage.setItem("buyer_phone", phone);
-
-      window.location.href = "/checkout.html";
-    });
-  </script>
-</body>
-</html>
+    window.location.href = "/checkout.html";
+  });
+</script>
