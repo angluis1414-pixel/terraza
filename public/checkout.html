@@ -6,6 +6,75 @@
   <title>Pagar $400 MXN - TerrazaPrompt</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://js.stripe.com/v3/"></script>
+  <style>
+    body {
+      background: linear-gradient(135deg, #6d28d9, #8b5cf6);
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .checkout-container {
+      background: #fff;
+      color: #1a1a1a;
+      border-radius: 12px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      text-align: center;
+    }
+
+    h2 {
+      color: #6d28d9;
+      margin-bottom: 0.5rem;
+    }
+
+    #buyerInfo {
+      color: #555;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+
+    #card-element {
+      margin: 1rem 0;
+      padding: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+
+    .pay-btn {
+      background: #8b5cf6;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      width: 100%;
+    }
+
+    .pay-btn:hover {
+      background: #7c3aed;
+    }
+
+    .small {
+      font-size: 0.85rem;
+      color: #777;
+      margin-top: 0.5rem;
+    }
+
+    #error-message {
+      color: #c53030;
+      margin-top: 0.8rem;
+      font-size: 0.9rem;
+    }
+  </style>
 </head>
 <body>
   <div class="checkout-container">
@@ -14,9 +83,10 @@
 
     <form id="payment-form">
       <div id="card-element" class="card-element"></div>
-      <button id="payBtn" class="pay-btn" type="submit">Pagar ahora</button>
-      <p id="error-message" style="color:#c53030; margin-top:10px;"></p>
-      <p class="small">🔒 Pago seguro con Stripe</p>
+
+      <button id="payBtn" class="pay-btn" type="submit">💳 Pagar ahora</button>
+      <p id="error-message"></p>
+      <p class="small">🔒 Pago protegido por Stripe</p>
     </form>
   </div>
 

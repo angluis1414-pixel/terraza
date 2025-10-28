@@ -1,16 +1,74 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Pago exitoso</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pago exitoso — TerrazaPrompt</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background: linear-gradient(135deg, #6d28d9, #8b5cf6);
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      text-align: center;
+    }
+
+    .success-box {
+      background: white;
+      color: #1a1a1a;
+      border-radius: 12px;
+      padding: 2.5rem;
+      max-width: 420px;
+      width: 90%;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    h1 {
+      color: #6d28d9;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      color: #333;
+      margin-bottom: 2rem;
+    }
+
+    .btn-home {
+      background: #8b5cf6;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s ease;
+      display: inline-block;
+    }
+
+    .btn-home:hover {
+      background: #7c3aed;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>🎉 Pago exitoso</h1>
-    <p class="small">Gracias — tu pago se procesó correctamente.</p>
-    <p class="small">Revisa en el Dashboard de Stripe (modo prueba) los detalles del PaymentIntent.</p>
+  <div class="success-box">
+    <h1>✅ ¡Pago exitoso!</h1>
+    <p>Gracias por tu compra. Te hemos enviado un correo con los detalles de tu pago.</p>
+    <a href="/" class="btn-home">Volver al inicio</a>
   </div>
+
+  <script>
+    // Redirige automáticamente al inicio después de unos segundos (opcional)
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 8000);
+  </script>
 </body>
 </html>
