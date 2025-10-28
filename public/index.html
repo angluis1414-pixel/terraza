@@ -1,35 +1,130 @@
-<form id="buyerForm">
-  <label>Nombre
-    <input type="text" id="name" required />
-  </label>
-
-  <label>Correo
-    <input type="email" id="email" required />
-  </label>
-
-  <label>Teléfono
-    <input type="tel" id="phone" required />
-  </label>
-
-  <button type="submit">Continuar al pago</button>
-</form>
-
-<script>
-  document.getElementById("buyerForm").addEventListener("submit", (e) => {
-    e.preventDefault();
-    const name = document.getElementById("name").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const phone = document.getElementById("phone").value.trim();
-
-    if (!name || !email || !phone) {
-      alert("Por favor completa todos los campos.");
-      return;
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Comprar boleto — TerrazaPrompt</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* 💜 Estilo general */
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #7e22ce, #a855f7, #c084fc);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
     }
 
-    sessionStorage.setItem("buyer_name", name);
-    sessionStorage.setItem("buyer_email", email);
-    sessionStorage.setItem("buyer_phone", phone);
+    .card {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 2rem;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      animation: fadeIn 0.8s ease;
+    }
 
-    window.location.href = "/checkout.html";
-  });
-</script>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      margin-bottom: 0.5rem;
+      font-size: 1.8rem;
+    }
+
+    p {
+      font-size: 0.95rem;
+      color: #f3e8ff;
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      text-align: left;
+      margin: 0.5rem 0 0.2rem;
+      font-weight: 500;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.7rem;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    button {
+      background-color: #8b5cf6;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.8rem 1.5rem;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: 0.3s;
+      width: 100%;
+    }
+
+    button:hover {
+      background-color: #7c3aed;
+      transform: scale(1.03);
+    }
+
+    span {
+      color: #e9d5ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🎟️ Comprar boleto — <span>TerrazaPrompt</span></h1>
+    <p>Completa tus datos antes de continuar al pago.</p>
+
+    <form id="buyerForm">
+      <label>Nombre</label>
+      <input type="text" id="name" placeholder="Tu nombre completo" required />
+
+      <label>Correo</label>
+      <input type="email" id="email" placeholder="tu@email.com" required />
+
+      <label>Teléfono</label>
+      <input type="tel" id="phone" placeholder="55 1234 5678" required />
+
+      <button type="submit">Continuar al pago 💳</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("buyerForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+
+      if (!name || !email || !phone) {
+        alert("Por favor completa todos los campos.");
+        return;
+      }
+
+      sessionStorage.setItem("buyer_name", name);
+      sessionStorage.setItem("buyer_email", email);
+      sessionStorage.setItem("buyer_phone", phone);
+
+      window.location.href = "/checkout.html";
+    });
+  </script>
+</body>
+</html>

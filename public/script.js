@@ -1,4 +1,3 @@
-// public/script.js
 document.addEventListener("DOMContentLoaded", async () => {
   if (!window.location.pathname.includes("checkout")) return;
 
@@ -7,46 +6,50 @@ document.addEventListener("DOMContentLoaded", async () => {
   const buyerPhone = sessionStorage.getItem("buyer_phone");
 
   if (!buyerName || !buyerEmail || !buyerPhone) {
-    alert("Faltan datos del comprador. Regresando al inicio...");
     window.location.href = "/";
     return;
   }
 
-  document.getElementById("buyerInfo").textContent =
+  document.getElementById("buyerInfo").innerText =
     `${buyerName} — ${buyerEmail} — ${buyerPhone}`;
 
-  // 🧾 Crear PaymentIntent en el backend
+  console.log("🔹 Creando PaymentIntent...");
+
   const resp = await fetch("/create-payment-intent", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name: buyerName, email: buyerEmail, phone: buyerPhone }),
+    body: JSON.stringify({ name: buyerName, email: buyerEmail }),
   });
 
   const data = await resp.json();
-  console.log("🔑 Backend responde:", data);
 
   if (!data.clientSecret) {
-    alert("Error al crear el intento de pago: " + (data.error || "Sin clientSecret"));
+    alert("Error al crear el PaymentIntent.");
+    console.error("Backend respondió:", data);
     return;
   }
 
-  const stripe = Stripe("TU_PUBLISHABLE_KEY"); // ⚠️ Usa tu clave pública real
-  const elements = stripe.elements({ clientSecret: data.clientSecret });
+  const clientSecret = data.clientSecret;
 
-  const paymentElement = elements.create("payment", {
-    layout: "tabs",
-  });
+  // Clave pública real de Stripe
+  const stripe = Stripe("pk_test_51SMhak1PQdQKgOrbqdvbWWvIU5KUYILK1jZmDPMbPUZ5m4Ba8OM1efjpcvsUSAI7uhmvvH9gxEWBTwLQgCVCqHCQ002q7dprsF");
 
+  const appearance = {
+    theme: "stripe",
+    variables: { colorPrimary: "#8b5cf6", colorBackground: "#fff", borderRadius: "8px" }
+  };
+
+  const elements = stripe.elements({ clientSecret, appearance });
+  const paymentElement = elements.create("payment");
   paymentElement.mount("#card-element");
 
   const form = document.getElementById("payment-form");
-  const errorMessage = document.getElementById("error-message");
   const payBtn = document.getElementById("payBtn");
+  const errorMsg = document.getElementById("error-message");
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     payBtn.disabled = true;
-    errorMessage.textContent = "";
 
     const { error } = await stripe.confirmPayment({
       elements,
@@ -56,14 +59,14 @@ document.addEventListener("DOMContentLoaded", async () => {
           billing_details: {
             name: buyerName,
             email: buyerEmail,
-            phone: buyerPhone,
-          },
-        },
-      },
+            phone: buyerPhone
+          }
+        }
+      }
     });
 
     if (error) {
-      errorMessage.textContent = error.message || "Error al procesar el pago.";
+      errorMsg.textContent = error.message;
       payBtn.disabled = false;
     }
   });
