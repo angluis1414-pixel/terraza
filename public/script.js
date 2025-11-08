@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("buyerInfo").innerText =
     `${buyerName} — ${buyerEmail} — ${buyerPhone}`;
 
-  // Crear PaymentIntent en tu backend
+  // Crear PaymentIntent en tu backend (💰 ahora $1,000 MXN)
   const resp = await fetch("/create-payment-intent", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -43,7 +43,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   };
 
-  // ⚙️ Crear el elemento de pago sin pedir datos extra
   const elements = stripe.elements({ clientSecret, appearance });
   const paymentElement = elements.create("payment", {
     layout: "tabs",

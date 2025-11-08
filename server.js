@@ -27,11 +27,14 @@ app.post("/create-payment-intent", async (req, res) => {
     }
 
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: 150000, // 💰 $1,500.00 MXN (en centavos)
+      amount: 100000, // 💰 $1,000.00 MXN (en centavos)
       currency: "mxn",
       automatic_payment_methods: { enabled: true },
       receipt_email: email,
-      metadata: { buyer_name: name || "Sin nombre", buyer_phone: phone || "No proporcionado" },
+      metadata: {
+        buyer_name: name || "Sin nombre",
+        buyer_phone: phone || "No proporcionado"
+      },
     });
 
     res.json({ clientSecret: paymentIntent.client_secret });
