@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const clientSecret = data.clientSecret;
 
   // Stripe public key (usa la tuya)
-  const stripe = Stripe("pk_live_51SA8N30We2bNrLYcGOUUDOl2eVwh0kq7ALxzrqOianBGggKRidNDujPQ0RZROgIL92htk3q97yOJuWFT3HEflE9A00eNTNWPf6");
+  const stripe = Stripe("pk_live_51SQvf8QmF0e4BX8dFb3cKRLMX7UruovqtlCYrfK9lB4tbZhC1SkSFHPcyHC3AnmKyBvWxoc8s3yA1NNtfoA9BOaR00cBpkMyKD");
 
   // Apariencia personalizada
   const appearance = {
